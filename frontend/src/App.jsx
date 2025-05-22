@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import axios from 'axios'
 import './App.css'
 
@@ -9,6 +9,8 @@ function App() {
   const [isLoading, setIsLoading] = useState(false)
   const [darkMode, setDarkMode] = useState(true)
   const [charCount, setCharCount] = useState(0)
+  const inputRef = useRef(null);
+
 
   useEffect(() => {
     document.documentElement.className = darkMode ? 'dark' : 'light'
@@ -42,9 +44,17 @@ function App() {
   };
 
   const handleInputChange = (e) => {
-    setInputText(e.target.value)
-    setCharCount(e.target.value.length)
-  }
+    const value = e.target.value;
+    setInputText(value);
+    setCharCount(value.length);
+
+    const isArabic = /[\u0600-\u06FF]/.test(value);
+    if (inputRef.current) {
+      inputRef.current.style.direction = isArabic ? 'rtl' : 'ltr';
+      inputRef.current.style.textAlign = isArabic ? 'right' : 'left';
+    }
+  };
+
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(result)
@@ -73,6 +83,7 @@ function App() {
             </label>
             <textarea
               id="text-input"
+              ref={inputRef}
               value={inputText}
               onChange={handleInputChange}
               rows={6}
@@ -130,7 +141,13 @@ function App() {
                 Copy to Clipboard
               </button>
             </div>
-            <div className="result-content">
+            <div
+              className="result-content"
+              style={{
+                direction: /[\u0600-\u06FF]/.test(result) ? 'rtl' : 'ltr',
+                textAlign: /[\u0600-\u06FF]/.test(result) ? 'right' : 'left'
+              }}
+            >
               {result.split('\n').map((paragraph, i) => (
                 <p key={i}>
                   {paragraph.split(/(\*\*.*?\*\*)/g).map((part, index) => {

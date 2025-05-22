@@ -26,7 +26,9 @@ def generate_content():
         if option == 'title':
             prompt = f"Generate a compelling title for this article idea: {text}"
         elif option == 'article':
-            prompt = f"Write a detailed article based on this idea: {text}"
+            prompt = (
+                      f"Write a detailed and professionally written article based on the following idea: {text}. "
+                      "Use clear structure, formal language, and well-organized paragraphs to deliver a polished and informative piece.")
         elif option == 'summary':
             prompt = f"Generate a concise summary for this article: {text}"
         else:
@@ -36,7 +38,7 @@ def generate_content():
             model="gpt-4o",  # Updated to use GPT-4o model
             messages=[{"role": "user", "content": prompt}],
             temperature=1,  # Increased from 0.7 to 1 for more creativity
-            max_tokens=500, 
+            max_tokens=800, 
             top_p=1,
             frequency_penalty=0,
             presence_penalty=0

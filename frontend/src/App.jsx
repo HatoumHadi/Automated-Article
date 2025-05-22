@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import './App.css'
 
@@ -69,7 +69,7 @@ function App() {
           <div className="form-group full-width">
             <label htmlFor="text-input">
               Enter your article/idea:
-              <span className="char-count">{charCount}/5000</span>
+              <span className="char-count"> {charCount}/5000</span>
             </label>
             <textarea
               id="text-input"
@@ -132,7 +132,14 @@ function App() {
             </div>
             <div className="result-content">
               {result.split('\n').map((paragraph, i) => (
-                <p key={i}>{paragraph}</p>
+                <p key={i}>
+                  {paragraph.split(/(\*\*.*?\*\*)/g).map((part, index) => {
+                    if (part.startsWith('**') && part.endsWith('**')) {
+                      return <strong key={index}>{part.slice(2, -2)}</strong>
+                    }
+                    return <React.Fragment key={index}>{part}</React.Fragment>
+                  })}
+                </p>
               ))}
             </div>
           </div>
